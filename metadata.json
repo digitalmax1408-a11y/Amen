@@ -1,0 +1,6 @@
+{
+  "name": "تحدي العائلة - Family Challenge",
+  "description": "تطبيق تحدي العائلة الكلاسيكي الفاخر لإدارة المهام والتحديات ورصيد النقاط والجوائز بين أفراد الأسرة بتصميم راقٍ.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

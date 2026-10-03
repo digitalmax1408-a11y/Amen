@@ -1,0 +1,77 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'anoooy14371437@gmail.com' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    // Default catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Connection test document
+    match /test/connection {
+      allow read, write: if true;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if true;
+    }
+
+    // Tasks collection
+    match /tasks/{taskId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // Rewards collection
+    match /rewards/{rewardId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // Claims collection
+    match /claims/{claimId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // Challenges collection
+    match /challenges/{challengeId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // Messages collection
+    match /messages/{messageId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // Notifications collection
+    match /notifications/{notificationId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // Audit Logs collection
+    match /auditLogs/{logId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+  }
+}
+

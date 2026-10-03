@@ -1,0 +1,185 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Family member profile and points",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique user ID" },
+        "name": { "type": "string", "description": "Member Arabic display name" },
+        "email": { "type": "string", "description": "Email address if registered" },
+        "role": { "type": "string", "enum": ["admin", "member"], "description": "Role in the family" },
+        "points": { "type": "number", "description": "Current points balance" },
+        "level": { "type": "number", "description": "Level based on total earned points" },
+        "levelTitle": { "type": "string", "description": "Honorary Arabic title" },
+        "streak": { "type": "number", "description": "Current active streak in days" },
+        "avatar": { "type": "string", "description": "Avatar URL or key" },
+        "createdAt": { "type": "string", "description": "Creation ISO date" },
+        "updatedAt": { "type": "string", "description": "Last update ISO date" }
+      },
+      "required": ["uid", "name", "role", "points"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "A family task assigned by admin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Task identifier" },
+        "title": { "type": "string", "description": "Task title" },
+        "description": { "type": "string", "description": "Task details" },
+        "points": { "type": "number", "description": "Reward points" },
+        "difficulty": { "type": "string", "enum": ["easy", "medium", "hard"], "description": "Difficulty level" },
+        "assigneeType": { "type": "string", "enum": ["specific", "all"], "description": "Assigned to one or all" },
+        "assignedToUid": { "type": "string", "description": "Target user ID if specific" },
+        "assignedToName": { "type": "string", "description": "Target user name" },
+        "dueDate": { "type": "string", "description": "Due date ISO string" },
+        "proofType": { "type": "string", "enum": ["photo", "video", "text", "any"], "description": "Required proof" },
+        "status": { "type": "string", "enum": ["pending", "in_progress", "submitted", "approved", "rejected"], "description": "Task status" },
+        "startedAt": { "type": "string", "description": "When member clicked start" },
+        "submittedAt": { "type": "string", "description": "When member submitted proof" },
+        "submissionProof": { "type": "string", "description": "Text, URL, or data for proof" },
+        "submissionType": { "type": "string", "description": "Type of proof attached" },
+        "rejectionReason": { "type": "string", "description": "Reason given if rejected" },
+        "createdBy": { "type": "string", "description": "Admin UID who created the task" },
+        "createdAt": { "type": "string", "description": "Created at ISO string" },
+        "updatedAt": { "type": "string", "description": "Updated at ISO string" }
+      },
+      "required": ["id", "title", "points", "status", "dueDate"]
+    },
+    "Reward": {
+      "title": "Reward",
+      "description": "Item in the rewards store",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Reward ID" },
+        "title": { "type": "string", "description": "Reward name" },
+        "description": { "type": "string", "description": "Reward description" },
+        "points": { "type": "number", "description": "Points needed to redeem" },
+        "icon": { "type": "string", "description": "Icon identifier" },
+        "imageUrl": { "type": "string", "description": "Image URL if available" },
+        "category": { "type": "string", "description": "Category name" },
+        "stock": { "type": "number", "description": "Available quantity or -1 for unlimited" },
+        "createdAt": { "type": "string", "description": "Created ISO timestamp" }
+      },
+      "required": ["id", "title", "points"]
+    },
+    "RewardClaim": {
+      "title": "RewardClaim",
+      "description": "Redemption request made by a family member",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Claim ID" },
+        "rewardId": { "type": "string", "description": "Reward ID" },
+        "rewardTitle": { "type": "string", "description": "Reward Title" },
+        "pointsSpent": { "type": "number", "description": "Points used" },
+        "userId": { "type": "string", "description": "Member UID" },
+        "userName": { "type": "string", "description": "Member name" },
+        "status": { "type": "string", "enum": ["pending", "approved", "delivered"], "description": "Claim status" },
+        "claimedAt": { "type": "string", "description": "ISO timestamp of redemption" }
+      },
+      "required": ["id", "rewardId", "userId", "pointsSpent", "status"]
+    },
+    "Challenge": {
+      "title": "Challenge",
+      "description": "Weekly or monthly collective challenge",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Challenge ID" },
+        "title": { "type": "string", "description": "Challenge title" },
+        "description": { "type": "string", "description": "Description and criteria" },
+        "targetCount": { "type": "number", "description": "Goal count e.g. 5 tasks" },
+        "currentCount": { "type": "number", "description": "Current collective progress" },
+        "rewardPoints": { "type": "number", "description": "Bonus points upon completion" },
+        "type": { "type": "string", "enum": ["weekly", "monthly", "special"], "description": "Challenge duration type" },
+        "endDate": { "type": "string", "description": "Expiration date" },
+        "isActive": { "type": "boolean", "description": "Whether active" }
+      },
+      "required": ["id", "title", "rewardPoints", "type"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Internal family communication",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Message ID" },
+        "senderId": { "type": "string", "description": "Sender UID" },
+        "senderName": { "type": "string", "description": "Sender display name" },
+        "recipientType": { "type": "string", "enum": ["all", "user"], "description": "Recipient target" },
+        "recipientId": { "type": "string", "description": "Target UID if single user" },
+        "recipientName": { "type": "string", "description": "Target display name" },
+        "title": { "type": "string", "description": "Subject / summary" },
+        "content": { "type": "string", "description": "Message text" },
+        "readBy": { "type": "string", "description": "Comma separated user IDs who read it" },
+        "createdAt": { "type": "string", "description": "Sent timestamp" }
+      },
+      "required": ["id", "senderId", "senderName", "content", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "System and action notifications",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Notification ID" },
+        "userId": { "type": "string", "description": "Target user ID or 'all'" },
+        "title": { "type": "string", "description": "Notification title" },
+        "message": { "type": "string", "description": "Notification body" },
+        "type": { "type": "string", "description": "Type of event" },
+        "isRead": { "type": "boolean", "description": "Read flag" },
+        "createdAt": { "type": "string", "description": "ISO timestamp" },
+        "link": { "type": "string", "description": "Target screen or item" }
+      },
+      "required": ["id", "userId", "title", "message", "isRead", "createdAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Log of point changes and critical administrative events",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Log ID" },
+        "performerName": { "type": "string", "description": "Who performed the action" },
+        "performerUid": { "type": "string", "description": "UID of performer" },
+        "actionType": { "type": "string", "description": "Type of operation (add_points, deduct_points, approve_task, redeem_reward, etc.)" },
+        "targetUserName": { "type": "string", "description": "Affected member name" },
+        "targetUid": { "type": "string", "description": "Affected member UID" },
+        "pointsDelta": { "type": "number", "description": "Change in points (+/-)" },
+        "reason": { "type": "string", "description": "Explanation / task title" },
+        "createdAt": { "type": "string", "description": "Timestamp" }
+      },
+      "required": ["id", "performerName", "actionType", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and points balances"
+    },
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Tasks created by admin and completed by members"
+    },
+    "/rewards/{rewardId}": {
+      "schema": "Reward",
+      "description": "Rewards available in the family store"
+    },
+    "/claims/{claimId}": {
+      "schema": "RewardClaim",
+      "description": "Reward redemption claims by users"
+    },
+    "/challenges/{challengeId}": {
+      "schema": "Challenge",
+      "description": "Weekly and monthly family challenges"
+    },
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Family internal message threads and announcements"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Real-time user alerts and updates"
+    },
+    "/auditLogs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Administrative actions and points ledger"
+    }
+  }
+}
